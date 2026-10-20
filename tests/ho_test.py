@@ -44,15 +44,11 @@ def close(a, b, eps=1e-5):
 def t_register():
     holo_outliner.register()
     assert "select" in dir(bpy.ops.ho)
-    assert hasattr(bpy.types, "HO_PT_view3d"), "VIEW_3D panel must register headless"
-    if hasattr(bpy.types, "HO_PT_outliner"):
-        print("  (OUTLINER/UI panel registered)", flush=True)
-    else:
-        # background mode has no OUTLINER/UI region; real Blender does
-        print("  (headless skip: OUTLINER/UI region needs a real window)", flush=True)
+    assert hasattr(bpy.types, "HO_PT_view3d"), "VIEW_3D panel must register"
+    assert not hasattr(bpy.types, "HO_PT_outliner"), "OUTLINER panel must not exist"
 
 
-check("register (background-tolerant)", t_register)
+check("register (strict)", t_register)
 
 
 # ---------------------------------------------------------------- tree

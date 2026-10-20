@@ -8,9 +8,9 @@ synced with the 3D view, F2 rename, viewport solo, and one-click grouping.
 bl_info = {
     "name": "Holo Outliner",
     "author": "Holowatts",
-    "version": (1, 0, 0),
+    "version": (1, 0, 1),
     "blender": (4, 2, 0),
-    "location": "Outliner > Sidebar (N) > Holo",
+    "location": "View3D > Sidebar (N) > Holo",
     "description": "C4D-style Object Manager: single-hierarchy tree, tri-state "
                    "visibility dots, viewport solo, quick grouping",
     "category": "Interface",

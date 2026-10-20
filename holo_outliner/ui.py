@@ -1,15 +1,15 @@
-"""Holo Outliner panels: C4D Object-Manager-style tree.
+"""Holo Outliner panel: C4D Object-Manager-style tree in the 3D View sidebar.
 
-Primary home is the Outliner sidebar (N panel, "Holo" tab); a second copy
-lives in the 3D View sidebar so the tree is reachable while modeling.
-Both panels share draw_holo_outliner().
+The panel cannot live inside Blender's Outliner editor: that space has no
+UI (sidebar) region at all, so bl_space_type='OUTLINER' with
+bl_region_type='UI' fails registration everywhere with
+"Region not found in space type" (this killed v1.0.0 on install).
+VIEW_3D/UI is the home.
 """
 
 import bpy
 
 from . import core
-
-_registered = []
 
 TYPE_ICONS = {
     "MESH": "OUTLINER_OB_MESH",
@@ -37,7 +37,7 @@ def _dot_icon(state):
 
 
 def draw_holo_outliner(layout, context):
-    """Shared draw for both panel homes. Kept importable for headless tests."""
+    """Panel draw. Kept importable for headless tests."""
     scene = context.scene
 
     # ---- header: group + solo ----
@@ -103,17 +103,6 @@ def draw_holo_outliner(layout, context):
             up.obj_name = obj.name
 
 
-class HO_PT_outliner(bpy.types.Panel):
-    bl_label = "Holo Outliner"
-    bl_idname = "HO_PT_outliner"
-    bl_space_type = "OUTLINER"
-    bl_region_type = "UI"
-    bl_category = "Holo"
-
-    def draw(self, context):
-        draw_holo_outliner(self.layout, context)
-
-
 class HO_PT_view3d(bpy.types.Panel):
     bl_label = "Holo Outliner"
     bl_idname = "HO_PT_view3d"
@@ -125,25 +114,14 @@ class HO_PT_view3d(bpy.types.Panel):
         draw_holo_outliner(self.layout, context)
 
 
-# VIEW_3D first: in background mode the OUTLINER/UI region does not exist,
-# so register what we can and tolerate the rest only when headless.
-CLASSES = (HO_PT_view3d, HO_PT_outliner)
+CLASSES = (HO_PT_view3d,)
 
 
 def register():
     for c in CLASSES:
-        try:
-            bpy.utils.register_class(c)
-        except RuntimeError:
-            if not bpy.app.background:
-                raise
-            # headless: OUTLINER/UI region needs a real window; the rest
-            # of the addon (ops, view3d panel) is still fully testable
-            continue
-        _registered.append(c)
+        bpy.utils.register_class(c)
 
 
 def unregister():
-    for c in reversed(_registered):
+    for c in reversed(CLASSES):
         bpy.utils.unregister_class(c)
-    _registered.clear()

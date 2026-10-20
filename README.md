@@ -13,8 +13,11 @@ then enable it in Preferences.
 
 ## Where it lives
 
-- Outliner editor → Sidebar (N) → **Holo** tab
 - 3D Viewport → Sidebar (N) → **Holo** tab
+
+(Blender's Outliner editor has no sidebar region, so the panel can't dock inside
+the Outliner window itself — v1.0.0 tried and failed to install. The 3D View
+sidebar is its home.)
 
 ## Interactions (C4D Object Manager parity)
 
